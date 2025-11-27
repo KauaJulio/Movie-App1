@@ -24,9 +24,9 @@ import { addIcons } from 'ionicons';
 import { play, heart, heartOutline, informationCircle } from 'ionicons/icons';
 
 @Component({
-  selector: 'app-tab1',
-  templateUrl: 'tab1.page.html',
-  styleUrls: ['tab1.page.scss'],
+  selector: 'app-home',
+  templateUrl: 'home.page.html',
+  styleUrls: ['home.page.scss'],
   imports: [
     CommonModule,
     IonHeader, 
@@ -41,7 +41,7 @@ import { play, heart, heartOutline, informationCircle } from 'ionicons/icons';
     IonSpinner
   ],
 })
-export class Tab1Page implements AfterViewInit, OnInit {
+export class HomePage implements AfterViewInit, OnInit {
   backgroundColor: string = 'rgb(0, 0, 0)';
   
   nowPlayingMovies?: Movie[];
