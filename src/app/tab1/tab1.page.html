@@ -1,0 +1,26 @@
+<ion-header class="ion-no-border" [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      HeroFlix
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" [scrollEvents]="true" (ionScroll)="onScroll($event)" [ngStyle]="{'--background': backgroundColor}">
+  <ion-refresher slot="fixed" (ionRefresh)="getMovies($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="poster-content">
+    <img #posterImage crossorigin="anonymous">
+  </div>
+
+  <p class="cartaz">Em cartaz:</p>
+  <div class="horizontal-scroll">
+    @for (movie of movies; track movie.id) {
+      <ion-card button class="movie-card">
+        <ion-img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"></ion-img>
+      </ion-card>
+    }
+  </div>
+</ion-content>
