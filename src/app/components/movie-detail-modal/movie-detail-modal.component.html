@@ -1,0 +1,139 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Detalhes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  @if (isLoading) {
+    <div class="loading-container">
+      <ion-spinner></ion-spinner>
+    </div>
+  } @else if (movieDetails) {
+    <div class="detail-container">
+      <!-- Backdrop Image -->
+      <div class="backdrop-container">
+        <img
+          [src]="'https://image.tmdb.org/t/p/w500' + movieDetails.backdrop_path"
+          alt="backdrop"
+          class="backdrop-image"
+        />
+        <div class="backdrop-overlay"></div>
+      </div>
+
+      <!-- Poster and Title -->
+      <div class="poster-section">
+        <img
+          [src]="'https://image.tmdb.org/t/p/w342' + movieDetails.poster_path"
+          alt="poster"
+          class="poster-image"
+        />
+        <div class="title-section">
+          <h1 class="hero-title">{{ getTitle() }}</h1>
+          <p class="hero-description">{{ getOverview() | slice: 0: 150 }}...</p>
+          <p class="year">
+            {{
+              formatDate(getReleaseDate())
+            }}
+          </p>
+          <div class="rating-container">
+            <span [ngClass]="'rating-' + getRatingColor(movieDetails.vote_average)">
+              ⭐ {{ movieDetails.vote_average.toFixed(1) }}/10
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <ion-button expand="block" class="play-button">
+          <ion-icon name="play" slot="start"></ion-icon>
+          Assistir
+        </ion-button>
+        <ion-button
+          expand="block"
+          fill="outline"
+          (click)="toggleFavorite()"
+          class="favorite-button"
+        >
+          <ion-icon
+            [name]="isFavorite ? 'heart' : 'heart-outline'"
+            slot="start"
+          ></ion-icon>
+          {{ isFavorite ? "Remover" : "Adicionar" }}
+        </ion-button>
+      </div>
+
+      <!-- Info Cards -->
+      <ion-card class="info-card">
+        <ion-card-content>
+          <div class="info-row">
+            <span class="info-label">Gêneros:</span>
+            <span class="info-value">{{ getGenreNames() }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Diretor:</span>
+            <span class="info-value">{{ getDirector() }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Elenco:</span>
+            <span class="info-value">{{ getMainCast() }}</span>
+          </div>
+          @if (getRuntime()) {
+            <div class="info-row">
+              <span class="info-label">Duração:</span>
+              <span class="info-value">{{ formatRuntime(getRuntime()) }}</span>
+            </div>
+          }
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Synopsis -->
+      <ion-card class="synopsis-card">
+        <ion-card-header>
+          <ion-card-title>Sinopse</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <p>{{ getOverview() || "Sem descrição disponível." }}</p>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Cast Section -->
+      @if (hasCredits()) {
+        <ion-card class="cast-card">
+          <ion-card-header>
+            <ion-card-title>Elenco Principal</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="cast-list">
+              @for (actor of getCastList(); track actor.id) {
+                <div class="cast-item">
+                  @if (actor.profile_path) {
+                    <img
+                      [src]="'https://image.tmdb.org/t/p/w185' + actor.profile_path"
+                      alt="{{ actor.name }}"
+                      class="cast-image"
+                    />
+                  } @else {
+                    <div class="cast-image-placeholder">
+                      <ion-icon name="person"></ion-icon>
+                    </div>
+                  }
+                  <div class="cast-info">
+                    <p class="cast-name">{{ actor.name }}</p>
+                    <p class="cast-character">{{ actor.character }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+          </ion-card-content>
+        </ion-card>
+      }
+    </div>
+  }
+</ion-content>

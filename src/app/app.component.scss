@@ -1,0 +1,19 @@
+:root {
+  --heroflex-primary: #000084;
+  --heroflex-primary-light: #1a1aff;
+  --heroflex-primary-dark: #000052;
+  --heroflex-accent: #ff6b6b;
+  --heroflex-background: #000;
+  --heroflex-surface: #1a1a1a;
+  --heroflex-text: #fff;
+  --heroflex-text-secondary: #aaa;
+}
+
+ion-app {
+  --ion-color-primary: var(--heroflex-primary);
+  --ion-color-primary-rgb: 0, 0, 132;
+  --ion-color-primary-contrast: #fff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: var(--heroflex-primary-dark);
+  --ion-color-primary-tint: var(--heroflex-primary-light);
+}

@@ -1,26 +1,184 @@
-<ion-header class="ion-no-border" [translucent]="true">
+<ion-header class="ion-no-border heroflex-header" [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      HeroFlix
+    <ion-title class="heroflex-logo">
+      <span class="heroflex-text">HeroFlix</span>
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" [scrollEvents]="true" (ionScroll)="onScroll($event)" [ngStyle]="{'--background': backgroundColor}">
-  <ion-refresher slot="fixed" (ionRefresh)="getMovies($event)">
+  <ion-refresher slot="fixed" (ionRefresh)="loadAllMovies($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <div class="poster-content">
-    <img #posterImage crossorigin="anonymous">
-  </div>
+  <!-- Hero Banner -->
+  @if (highlightMovie && !isLoading) {
+    <div class="hero-banner">
+      <img #posterImage crossorigin="anonymous" class="hero-image" />
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1 class="hero-title">{{ highlightMovie.title }}</h1>
+        <p class="hero-description">{{ highlightMovie.overview | slice: 0: 150 }}...</p>
+        <div class="hero-buttons">
+          <ion-button expand="block" class="play-btn" (click)="openMovieDetail(highlightMovie)">
+            <ion-icon name="play" slot="start"></ion-icon>
+            Assistir
+          </ion-button>
+          <ion-button
+            expand="block"
+            fill="outline"
+            class="info-btn"
+            (click)="openMovieDetail(highlightMovie)"
+          >
+            <ion-icon name="information-circle" slot="start"></ion-icon>
+            Mais Info
+          </ion-button>
+        </div>
+      </div>
+    </div>
+  }
 
-  <p class="cartaz">Em cartaz:</p>
-  <div class="horizontal-scroll">
-    @for (movie of movies; track movie.id) {
-      <ion-card button class="movie-card">
-        <ion-img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"></ion-img>
-      </ion-card>
+  @if (isLoading) {
+    <div class="loading-container">
+      <ion-spinner></ion-spinner>
+    </div>
+  } @else {
+    <!-- Trending Section -->
+    @if (trendingMovies && trendingMovies.length > 0) {
+      <div class="section">
+        <h2 class="section-title">🔥 Tendências</h2>
+        <div class="horizontal-scroll">
+          @for (movie of trendingMovies.slice(0, 10); track movie.id) {
+            <div class="movie-item" (click)="openMovieDetail(movie)">
+              <div class="movie-poster">
+                <ion-img
+                  [src]="'https://image.tmdb.org/t/p/w342' + movie.poster_path"
+                  class="poster-img"
+                ></ion-img>
+                <div class="movie-overlay">
+                  <ion-button
+                    size="small"
+                    class="favorite-btn"
+                    (click)="toggleWatchlist(movie, $event)"
+                  >
+                    <ion-icon
+                      [name]="isInWatchlist(movie.id) ? 'heart' : 'heart-outline'"
+                    ></ion-icon>
+                  </ion-button>
+                </div>
+              </div>
+              <p class="movie-title">{{ movie.title }}</p>
+              <div class="movie-rating">
+                ⭐ {{ movie.vote_average.toFixed(1) }}
+              </div>
+            </div>
+          }
+        </div>
+      </div>
     }
-  </div>
+
+    <!-- Popular Section -->
+    @if (popularMovies && popularMovies.length > 0) {
+      <div class="section">
+        <h2 class="section-title">⭐ Populares</h2>
+        <div class="horizontal-scroll">
+          @for (movie of popularMovies.slice(0, 10); track movie.id) {
+            <div class="movie-item" (click)="openMovieDetail(movie)">
+              <div class="movie-poster">
+                <ion-img
+                  [src]="'https://image.tmdb.org/t/p/w342' + movie.poster_path"
+                  class="poster-img"
+                ></ion-img>
+                <div class="movie-overlay">
+                  <ion-button
+                    size="small"
+                    class="favorite-btn"
+                    (click)="toggleWatchlist(movie, $event)"
+                  >
+                    <ion-icon
+                      [name]="isInWatchlist(movie.id) ? 'heart' : 'heart-outline'"
+                    ></ion-icon>
+                  </ion-button>
+                </div>
+              </div>
+              <p class="movie-title">{{ movie.title }}</p>
+              <div class="movie-rating">
+                ⭐ {{ movie.vote_average.toFixed(1) }}
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Top Rated Section -->
+    @if (topRatedMovies && topRatedMovies.length > 0) {
+      <div class="section">
+        <h2 class="section-title">🏆 Melhor Avaliados</h2>
+        <div class="horizontal-scroll">
+          @for (movie of topRatedMovies.slice(0, 10); track movie.id) {
+            <div class="movie-item" (click)="openMovieDetail(movie)">
+              <div class="movie-poster">
+                <ion-img
+                  [src]="'https://image.tmdb.org/t/p/w342' + movie.poster_path"
+                  class="poster-img"
+                ></ion-img>
+                <div class="movie-overlay">
+                  <ion-button
+                    size="small"
+                    class="favorite-btn"
+                    (click)="toggleWatchlist(movie, $event)"
+                  >
+                    <ion-icon
+                      [name]="isInWatchlist(movie.id) ? 'heart' : 'heart-outline'"
+                    ></ion-icon>
+                  </ion-button>
+                </div>
+              </div>
+              <p class="movie-title">{{ movie.title }}</p>
+              <div class="movie-rating">
+                ⭐ {{ movie.vote_average.toFixed(1) }}
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Now Playing Section -->
+    @if (nowPlayingMovies && nowPlayingMovies.length > 0) {
+      <div class="section">
+        <h2 class="section-title">🎬 Em Cartaz</h2>
+        <div class="horizontal-scroll">
+          @for (movie of nowPlayingMovies.slice(0, 10); track movie.id) {
+            <div class="movie-item" (click)="openMovieDetail(movie)">
+              <div class="movie-poster">
+                <ion-img
+                  [src]="'https://image.tmdb.org/t/p/w342' + movie.poster_path"
+                  class="poster-img"
+                ></ion-img>
+                <div class="movie-overlay">
+                  <ion-button
+                    size="small"
+                    class="favorite-btn"
+                    (click)="toggleWatchlist(movie, $event)"
+                  >
+                    <ion-icon
+                      [name]="isInWatchlist(movie.id) ? 'heart' : 'heart-outline'"
+                    ></ion-icon>
+                  </ion-button>
+                </div>
+              </div>
+              <p class="movie-title">{{ movie.title }}</p>
+              <div class="movie-rating">
+                ⭐ {{ movie.vote_average.toFixed(1) }}
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  }
+
+  <div class="spacer"></div>
 </ion-content>
