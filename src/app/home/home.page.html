@@ -69,7 +69,7 @@
               </div>
               <p class="movie-title">{{ movie.title }}</p>
               <div class="movie-rating">
-                ⭐ {{ movie.vote_average.toFixed(1) }}
+                {{ movie.vote_average | ratingFormat }}
               </div>
             </div>
           }

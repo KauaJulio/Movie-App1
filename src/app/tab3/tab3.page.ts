@@ -70,7 +70,7 @@ export class Tab3Page implements OnInit {
       const results = await this.movieService.searchMulti(this.searchQuery).toPromise();
       this.searchResults = results || [];
     } catch (error) {
-      console.error('Error searching:', error);
+      console.error('Erro ao buscar:', error);
       this.searchResults = [];
     } finally {
       this.isSearching = false;

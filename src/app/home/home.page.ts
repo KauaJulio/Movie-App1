@@ -20,6 +20,7 @@ import { MovieService } from '../services/movie.service';
 import { WatchlistService } from '../services/watchlist.service';
 import { UtilsHelper } from '../utils/utils.helper';
 import { MovieDetailModalComponent } from '../components/movie-detail-modal/movie-detail-modal.component';
+import { RatingFormatPipe } from '../pipes/rating-format.pipe';
 import { addIcons } from 'ionicons';
 import { play, heart, heartOutline, informationCircle } from 'ionicons/icons';
 
@@ -38,7 +39,8 @@ import { play, heart, heartOutline, informationCircle } from 'ionicons/icons';
     IonImg,
     IonButton,
     IonIcon,
-    IonSpinner
+    IonSpinner,
+    RatingFormatPipe
   ],
 })
 export class HomePage implements AfterViewInit, OnInit {
@@ -110,7 +112,7 @@ export class HomePage implements AfterViewInit, OnInit {
       this.isLoading = false;
       this.completeLoading(loading, refresher);
     }).catch((error) => {
-      console.error('Error loading movies:', error);
+      console.error('Erro ao carregar filmes:', error);
       this.isLoading = false;
       this.completeLoading(loading, refresher);
     });

@@ -69,7 +69,7 @@ export class MovieDetailModalComponent implements OnInit {
           this.isLoading = false;
         },
         error: (err) => {
-          console.error('Error loading movie details:', err);
+          console.error('Erro ao carregar detalhes do filme:', err);
           this.isLoading = false;
         }
       });
@@ -81,7 +81,7 @@ export class MovieDetailModalComponent implements OnInit {
           this.isLoading = false;
         },
         error: (err) => {
-          console.error('Error loading TV series details:', err);
+          console.error('Erro de carregamento no detalhes:', err);
           this.isLoading = false;
         }
       });
